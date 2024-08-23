@@ -103,7 +103,7 @@ jobs:
           digest=$(cat /tmp/digests/digest.txt)
           digest=${digest#sha256:}
           echo "Digest: $digest"
-          docker buildx imagetools create --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CONTAINER }}:latest \
+          docker buildx imagetools create --append --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CONTAINER }}:latest \
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CONTAINER }}@sha256:$digest
       - name: Inspect image
         run: |
