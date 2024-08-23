@@ -76,12 +76,12 @@ jobs:
     needs:
       - build
     steps:
-      - name: Download digests
+      - name: Download amd64 digest
         uses: actions/download-artifact@v3
         with:
           name: digest-linux/amd64
           path: /tmp/digests
-      - name: Download digests
+      - name: Download arm64 digest
         uses: actions/download-artifact@v3
         with:
           name: digest-linux/arm64
