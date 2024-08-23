@@ -62,7 +62,7 @@ jobs:
           mkdir -p /tmp/digests
           digest="${{ steps.build.outputs.digest }}"
           echo "Digest: $digest"
-          touch "/tmp/digests/${digest#sha256:}"
+          echo "$digest" > /tmp/digests/digest.txt
       - name: Upload digest
         uses: actions/upload-artifact@v3
         with:
@@ -84,7 +84,7 @@ jobs:
       - name: List downloaded files
         run: ls -l /tmp/digests
       - name: Debug Digest Content
-        run: cat /tmp/digests/*
+        run: cat /tmp/digests/digest.txt
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
@@ -100,10 +100,10 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          digest=$(cat /tmp/digests/*)
+          digest=$(cat /tmp/digests/digest.txt)
           echo "Digest: $digest"
           docker buildx imagetools create --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CONTAINER }}:latest \
-          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CONTAINER }}@sha256:$digest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CONTAINER }}@sha256:$digest
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CONTAINER }}:latest
